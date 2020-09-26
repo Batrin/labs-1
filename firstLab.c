@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
 		  	printf("descendant %d ", pid);
 		  	printf("%s\n", argv[1]);
 		  	execvp(argv[1], &argv[1]);
-		  	exit(0);
+		  	exit(1);
 		  default: 
 		  	waitpid(pid, &status, 0);
 		  	printf("parent %d status %d\n", pid, WEXITSTATUS(status));
