@@ -8,78 +8,68 @@ int main(int argc, char const *argv[])
 {
 	//FILE *file;
 	char name[] = "file.txt";
-	char str[255];
-	char sym;
-    int count = 0; 
-
-	int ch, strLength = 0;
-	int num, i = 0, position = 0;
-
-	//file = fopen(name, "r");
+	int strLength = 0, num, i = 0, position = 0;
 
 	int file1;
+
 	file1 = open(name, O_RDONLY);
-	int arr[255];
-	int *lenghts = NULL;
+	
+	int *lengths = NULL;
 	int *positions = NULL;
 
 
 	char buff[64];
 
-	arr[0] = 0;
-	//lenghts = (int*)realloc(lenghts, 1 * sizeof(int));
+	lengths = (int*)realloc(lengths, 1 * sizeof(int));
     
     while(read(file1, buff, 1) != 0){
-    	//strLenght++;
     	if (buff[0] == '\n')
     	{
-    		//lenghts[i] = strLenght;
+    		lengths[i] = strLength;
     		i++;
     		position = lseek(file1, 0, SEEK_CUR);
-    		//printf("\n|%d, %d|\n", i, position);
     		positions = (int*)realloc(positions, (i) * sizeof(int));
-    		//lenghts = (int*)realloc(lenghts, (i) * sizeof(int));
+    		lengths = (int*)realloc(lengths, (i) * sizeof(int));
     		positions[i] = position;
 
-    		//strLenght = 0;
+    		strLength = 0;
+    	}else{
+ 		   	strLength++;
     	}
-    	//printf("%s", buff);
 
     }
-    
+
+    lengths[i] = strLength;
+    positions = (int*)realloc(positions, (i + 1) * sizeof(int));
+    positions[i+1] = lseek(file1, 0, SEEK_END);
+
 	do{
-		printf("Введите номер строки\n");
+		memset(buff, 0, 64);
+		printf("\nВведите номер строки\n");
 		scanf("%d", &num);
-		lseek(file1, positions[num-1], SEEK_SET);
-		strLength = positions[num] - positions[num-1];
-		read(file1, buff, strLength);
-		printf("\n%s\n", buff);
+		if(num > i+1){
+			printf("В файле всего %d строк(и), введите номер строки из этого диапазона\n", i+1);
+		}else if(num != 0){
+			lseek(file1, positions[num-1], SEEK_SET);
+			strLength = lengths[num-1];
+			read(file1, buff, strLength);
+			printf("\n%s, длина %d\n", buff, strLength);
+		}
 
 	} while(num != 0);
 
-	printf("\n%d\n", positions[0]);
-	printf("%d\n", positions[1]);
-	printf("%d\n", positions[2]);
-	printf("%d\n", positions[3]);
-	printf("%d\n", positions[2] - positions[1]);
-	
-
-
-    /*printf("\n%d, %d\n", positions[0], lenghts[0]);
-    printf("\n%d, %d\n", positions[1], lenghts[1]);
-    printf("\n%d, %d\n", positions[2], lenghts[2]);
-    printf("\n%d, %d\n", positions[3], lenghts[3]);*/
-
-  
-
-
-    //printf("Содержимое файла:%s\nВсего прочитано: %i\n", buff, count);
-    
-
-
+/*
+    printf("\n%d, %d\n", positions[0], lengths[0]);
+    printf("\n%d, %d\n", positions[1], lengths[1]);
+    printf("\n%d, %d\n", positions[2], lengths[2]);
+    printf("\n%d, %d\n", positions[3], lengths[3]);
+*/
 	
 
 	close(file1);
+	free(positions);
+	free(lengths);
+
 
 
 
