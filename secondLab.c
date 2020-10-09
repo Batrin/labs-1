@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
 
 	char buff[64];
 
-	lengths = (int*)realloc(lengths, 1 * sizeof(int));
+	lengths = (int*)malloc(1 * sizeof(int));
     
     while(read(file1, buff, 1) != 0){
     	if (buff[0] == '\n')
@@ -28,8 +28,8 @@ int main(int argc, char const *argv[])
     		lengths[i] = strLength;
     		i++;
     		position = lseek(file1, 0, SEEK_CUR);
-    		positions = (int*)realloc(positions, (i) * sizeof(int));
-    		lengths = (int*)realloc(lengths, (i) * sizeof(int));
+    		positions = (int*)realloc(positions, (i+1) * sizeof(int));
+    		lengths = (int*)realloc(lengths, (i+1) * sizeof(int));
     		positions[i] = position;
 
     		strLength = 0;
@@ -40,7 +40,7 @@ int main(int argc, char const *argv[])
     }
 
     lengths[i] = strLength;
-    positions = (int*)realloc(positions, (i + 1) * sizeof(int));
+    positions = (int*)realloc(positions, (i + 2) * sizeof(int));
     positions[i+1] = lseek(file1, 0, SEEK_END);
 
 	do{
@@ -58,12 +58,11 @@ int main(int argc, char const *argv[])
 
 	} while(num != 0);
 
-/*
-    printf("\n%d, %d\n", positions[0], lengths[0]);
-    printf("\n%d, %d\n", positions[1], lengths[1]);
-    printf("\n%d, %d\n", positions[2], lengths[2]);
-    printf("\n%d, %d\n", positions[3], lengths[3]);
-*/
+
+/*	for (int n = 0; n < i; n++){
+	    printf("\n%d, %d\n", positions[n], lengths[n]);
+	}	*/
+
 	
 
 	close(file1);
