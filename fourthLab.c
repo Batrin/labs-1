@@ -33,10 +33,10 @@ int main(int argc, char const *argv[])
 	if (argv[1] == NULL) {
         getcwd(path, 255);
     	stat(path, &statFile);
-    	dir = opendir(path);
+    	//dir = opendir(path);
     }else{
     	stat(argv[1], &statFile);
-    	dir = opendir(argv[1]);
+    	//dir = opendir(argv[1]);
     }
 
 
@@ -119,11 +119,14 @@ int main(int argc, char const *argv[])
 		strcat(accessOther, "-");
 	}
 
-	entry = readdir(dir);
+	
+	/*while((entry = readdir(dir)) != NULL){
+		printf("%s\n", entry->d_name);
+	}*/
 
 	strftime(date, 100, "%b %d %H:%M", timeinfo);
     
-	printf("[%c]%s%s%s %s %s %ld %s %s\n", 
+	printf("[%c]%s%s%s %s %s %ld %s\n", 
 			typeFile,
 			accessUser,
 			accessGroup,
@@ -131,8 +134,7 @@ int main(int argc, char const *argv[])
 			pwd->pw_name,
 			gr->gr_name,
 			size,
-			date,
-			entry->d_name);
+			date);
 
     
 	//printf("%s %u %u\n", path, S_IFDIR, statFile.st_mode);
@@ -176,9 +178,9 @@ int main(int argc, char const *argv[])
 		
 
 
-		closedir(dir);
 	}
 	*/
+	closedir(dir);
 
 	return 0;
 }
